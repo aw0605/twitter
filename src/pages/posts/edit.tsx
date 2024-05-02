@@ -1,3 +1,5 @@
+import PostEditForm from "components/posts/PostEditForm";
+
 export default function PostEditPage() {
-  return <h1>게시물수정페이지</h1>;
+  return <PostEditForm />;
 }
