@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { BsHouse } from "react-icons/bs";
-import { FaUserCircle } from "react-icons/fa";
+import { FaUserCircle, FaSearch } from "react-icons/fa";
 import { MdLogout, MdLogin } from "react-icons/md";
 import { useContext } from "react";
 import AuthContext from "context/AuthContext";
@@ -22,6 +22,10 @@ export default function MenuList() {
         <button className="" type="button" onClick={() => navigate("/profile")}>
           <FaUserCircle />
           Profile
+        </button>
+        <button className="" type="button" onClick={() => navigate("/search")}>
+          <FaSearch />
+          Search
         </button>
         {user === null ? (
           <button
