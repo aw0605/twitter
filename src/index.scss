@@ -48,6 +48,10 @@ body {
   cursor: pointer;
 }
 
+.button:disabled {
+  opacity: 0.5;
+}
+
 .footer {
   position: fixed;
   right: 0;
