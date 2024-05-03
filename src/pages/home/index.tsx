@@ -16,6 +16,7 @@ export interface PostProps {
   likeCounts?: number;
   comments?: any;
   hashtags?: string[];
+  imageUrl?: string;
 }
 
 export default function HomePage() {

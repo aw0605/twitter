@@ -4,7 +4,6 @@ import PostBox from "components/posts/PostBox";
 import AuthContext from "context/AuthContext";
 import {
   collection,
-  doc,
   onSnapshot,
   orderBy,
   query,

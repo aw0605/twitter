@@ -25,7 +25,6 @@ function App() {
     });
   }, [auth]);
 
-  console.log(auth, isAuthenticated);
   return (
     <Layout>
       <ToastContainer

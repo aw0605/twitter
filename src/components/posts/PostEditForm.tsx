@@ -1,16 +1,28 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "firebaseApp";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadString,
+} from "firebase/storage";
+import { db, storage } from "firebaseApp";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { v4 as uuidv4 } from "uuid";
+import AuthContext from "context/AuthContext";
 import { PostProps } from "pages/home";
 import { FiImage } from "react-icons/fi";
+import PostHeader from "./PostHeader";
 
 export default function PostEditForm() {
   const [post, setPost] = useState<PostProps | null>(null);
   const [content, setContent] = useState<string>("");
   const [tags, setTags] = useState<string[]>([]);
   const [hashtag, setHashtag] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [image, setImage] = useState<string | null>(null);
+  const { user } = useContext(AuthContext);
   const params = useParams();
   const navigate = useNavigate();
 
@@ -21,23 +33,60 @@ export default function PostEditForm() {
       setPost({ ...(docSnap?.data() as PostProps), id: docSnap.id });
       setContent(docSnap?.data()?.content);
       setTags(docSnap?.data()?.hashtags);
+      setImage(docSnap?.data()?.imageUrl);
     }
   }, [params.id]);
 
-  const handleFileUpload = () => {};
+  const handleFileUpload = (e: any) => {
+    const {
+      target: { files },
+    } = e;
+
+    const file = files?.[0];
+    const fileReader = new FileReader();
+    fileReader?.readAsDataURL(file);
+
+    fileReader.onloadend = (e: any) => {
+      const { result } = e?.currentTarget;
+      setImage(result);
+    };
+  };
+
+  const handleDeleteImg = () => {
+    setImage(null);
+  };
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     try {
       if (post) {
+        // 기존 사진 삭제 후
+        if (post?.imageUrl) {
+          let imageRef = ref(storage, post?.imageUrl);
+          await deleteObject(imageRef).catch((e) => console.log(e));
+        }
+
+        // 새로운 사진 업로드
+        let imageUrl = "";
+        if (image) {
+          const key = `${user?.uid}/${uuidv4()}`;
+          const storageRef = ref(storage, key);
+          const data = await uploadString(storageRef, image, "data_url");
+          imageUrl = await getDownloadURL(data?.ref);
+        }
+
         const postRef = doc(db, "posts", post?.id);
         await updateDoc(postRef, {
           content: content,
           hashtags: tags,
+          imageUrl: imageUrl,
         });
         navigate(`/posts/${post?.id}`);
         toast.success("게시물을 수정했습니다.");
+        setImage(null);
+        setIsSubmitting(false);
       }
     } catch (e: any) {
       console.log(e);
@@ -81,53 +130,76 @@ export default function PostEditForm() {
   }, [getPost, params.id]);
 
   return (
-    <form className="post-form" onSubmit={onSubmit}>
-      <textarea
-        name="content"
-        id="content"
-        className="post-form__textarea"
-        placeholder="What is happening?"
-        required
-        onChange={onChange}
-        value={content}
-      />
-      <div className="post-form__hashtags">
-        <span className="post-form__hashtags-outputs">
-          {tags?.map((tag, index) => (
-            <span
-              className="post-form__hashtags-tag"
-              key={index}
-              onClick={() => removeTag(tag)}
-            >
-              #{tag}
-            </span>
-          ))}
-        </span>
+    <div className="post">
+      <PostHeader />
+      <form className="post-form" onSubmit={onSubmit}>
+        <textarea
+          name="content"
+          id="content"
+          className="post-form__textarea"
+          placeholder="What is happening?"
+          required
+          onChange={onChange}
+          value={content}
+        />
+        <div className="post-form__hashtags">
+          <span className="post-form__hashtags-outputs">
+            {tags?.map((tag, index) => (
+              <span
+                className="post-form__hashtags-tag"
+                key={index}
+                onClick={() => removeTag(tag)}
+              >
+                #{tag}
+              </span>
+            ))}
+          </span>
 
-        <input
-          type="text"
-          name="hashtag"
-          id="hashtag"
-          className="post-form__input"
-          placeholder="해시태그 + 스페이스바 입력"
-          onChange={onChangeHashtag}
-          onKeyUp={handleKeyUp}
-          value={hashtag}
-        />
-      </div>
-      <div className="post-form__submit-area">
-        <label htmlFor="file-input" className="post-form__file">
-          <FiImage className="post-form__file-icon" />
-        </label>
-        <input
-          type="file"
-          name="file-input"
-          accept="image/*"
-          onChange={handleFileUpload}
-          className="hidden"
-        />
-        <input type="submit" value="수정" className="post-form__submit-btn" />
-      </div>
-    </form>
+          <input
+            type="text"
+            name="hashtag"
+            id="hashtag"
+            className="post-form__input"
+            placeholder="해시태그 + 스페이스바 입력"
+            onChange={onChangeHashtag}
+            onKeyUp={handleKeyUp}
+            value={hashtag}
+          />
+        </div>
+        <div className="post-form__submit-area">
+          <div className="post-form__image-area">
+            <label htmlFor="file-input" className="post-form__file">
+              <FiImage className="post-form__file-icon" />
+            </label>
+            <input
+              type="file"
+              name="file-input"
+              id="file-input"
+              accept="image/*"
+              onChange={handleFileUpload}
+              className="hidden"
+            />
+            {image && (
+              <div className="post-form__attachment">
+                <img src={image} alt="attachment" width={100} height={100} />
+                <button
+                  className="post-form__clear-btn"
+                  type="button"
+                  onClick={handleDeleteImg}
+                >
+                  Clear
+                </button>
+              </div>
+            )}
+          </div>
+          <input
+            type="submit"
+            value="수정"
+            className="post-form__submit-btn"
+            disabled={isSubmitting}
+          />
+        </div>
+      </form>
+    </div>
   );
 }
