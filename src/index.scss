@@ -314,12 +314,40 @@ body {
     display: flex;
     gap: 4px;
     align-items: center;
+
+    &--between {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+    }
   }
 
   &__email,
   &__createdAt {
     font-size: 12px;
     color: $grayText;
+  }
+
+  &__follow-btn {
+    @extend .button;
+    background-color: $white;
+    color: $activeBorder;
+
+    &:hover {
+      background-color: $activeBorder;
+      color: $white;
+    }
+  }
+
+  &__following-btn {
+    @extend .button;
+    background-color: $activeBorder;
+    color: $white;
+
+    &:hover {
+      background-color: $white;
+      color: $activeBorder;
+    }
   }
 
   &__box {
