@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { BsHouse } from "react-icons/bs";
 import { FaUserCircle, FaSearch } from "react-icons/fa";
-import { MdLogout, MdLogin } from "react-icons/md";
+import { MdLogout, MdLogin, MdNotificationsNone } from "react-icons/md";
 import { useContext } from "react";
 import AuthContext from "context/AuthContext";
 import { getAuth, signOut } from "firebase/auth";
@@ -26,6 +26,14 @@ export default function MenuList() {
         <button className="" type="button" onClick={() => navigate("/search")}>
           <FaSearch />
           Search
+        </button>
+        <button
+          className=""
+          type="button"
+          onClick={() => navigate("/notifications")}
+        >
+          <MdNotificationsNone />
+          Notification
         </button>
         {user === null ? (
           <button
