@@ -20,15 +20,15 @@ export default function MenuList() {
       <div className="footer__grid">
         <button className="" type="button" onClick={() => navigate("/")}>
           <BsHouse />
-          {t("MENU_HOME")}
+          <span className="footer__grid--text">{t("MENU_HOME")}</span>
         </button>
         <button className="" type="button" onClick={() => navigate("/profile")}>
           <FaUserCircle />
-          {t("MENU_PROFILE")}
+          <span className="footer__grid--text">{t("MENU_PROFILE")}</span>
         </button>
         <button className="" type="button" onClick={() => navigate("/search")}>
           <FaSearch />
-          {t("MENU_SEARCH")}
+          <span className="footer__grid--text">{t("MENU_SEARCH")}</span>
         </button>
         <button
           className=""
@@ -36,7 +36,7 @@ export default function MenuList() {
           onClick={() => navigate("/notifications")}
         >
           <MdNotificationsNone />
-          {t("MENU_NOTI")}
+          <span className="footer__grid--text">{t("MENU_NOTI")}</span>
         </button>
         {user === null ? (
           <button
@@ -45,7 +45,7 @@ export default function MenuList() {
             onClick={() => navigate("/users/login")}
           >
             <MdLogin />
-            {t("MENU_LOGIN")}
+            <span className="footer__grid--text">{t("MENU_LOGIN")}</span>
           </button>
         ) : (
           <button
@@ -58,7 +58,7 @@ export default function MenuList() {
             }}
           >
             <MdLogout />
-            {t("MENU_LOGOUT")}
+            <span className="footer__grid--text">{t("MENU_LOGOUT")}</span>
           </button>
         )}
       </div>

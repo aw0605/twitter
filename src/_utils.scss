@@ -1,0 +1,46 @@
+// 변수
+$font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+  "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+
+$background: #1e293b;
+$backgroundLight: #263340;
+$activeBg: #3c495f5f;
+$white: #ffffff;
+$border: #708090;
+$primaryColor: #60a5fb;
+$activeBorder: #3b82f6;
+$grayText: #9ca3af;
+$danger: #dc2626;
+$dangerDark: #dc26268e;
+$gray: #6b7280;
+$grayDark: #4c515b;
+
+// 브레이크 포인트
+$mobile: 360px;
+$tablet: 600px;
+$desktop: 1024px;
+
+// 미디어 쿼리 믹스인
+@mixin xsMobile {
+  @media (max-width: #{$mobile - 1px}) {
+    @content;
+  }
+}
+
+@mixin mobile {
+  @media (min-width: $mobile) and (max-width: #{$tablet - 1px}) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: $tablet) and (max-width: #{$desktop - 1px}) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: $desktop) {
+    @content;
+  }
+}
