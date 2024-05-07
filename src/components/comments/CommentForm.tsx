@@ -10,6 +10,7 @@ import {
 import { db } from "firebaseApp";
 import { PostProps } from "pages/home";
 import { toast } from "react-toastify";
+import useTranslation from "hooks/useTranslation";
 
 export interface CommentFormProps {
   post: PostProps | null;
@@ -18,6 +19,8 @@ export interface CommentFormProps {
 export default function CommentForm({ post }: CommentFormProps) {
   const [comment, setComment] = useState<string>("");
   const { user } = useContext(AuthContext);
+
+  const t = useTranslation();
 
   const truncate = (str: string) => {
     return str?.length > 10 ? str?.substring(0, 10) + "..." : str;
@@ -82,7 +85,7 @@ export default function CommentForm({ post }: CommentFormProps) {
         name="comment"
         id="comment"
         className="post-form__textarea"
-        placeholder="What is happening?"
+        placeholder={t("POST_PLACEHOLDER")}
         value={comment}
         onChange={onChange}
         required
@@ -91,7 +94,7 @@ export default function CommentForm({ post }: CommentFormProps) {
         <div />
         <input
           type="submit"
-          value="Comment"
+          value={t("BUTTON_COMMENT")}
           className="post-form__submit-btn"
           disabled={!comment}
         />

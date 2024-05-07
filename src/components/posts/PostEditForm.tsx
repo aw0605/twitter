@@ -14,6 +14,7 @@ import AuthContext from "context/AuthContext";
 import { PostProps } from "pages/home";
 import { FiImage } from "react-icons/fi";
 import PostHeader from "./PostHeader";
+import useTranslation from "hooks/useTranslation";
 
 export default function PostEditForm() {
   const [post, setPost] = useState<PostProps | null>(null);
@@ -25,6 +26,8 @@ export default function PostEditForm() {
   const { user } = useContext(AuthContext);
   const params = useParams();
   const navigate = useNavigate();
+
+  const t = useTranslation();
 
   const getPost = useCallback(async () => {
     if (params.id) {
@@ -194,7 +197,7 @@ export default function PostEditForm() {
           </div>
           <input
             type="submit"
-            value="수정"
+            value={t("BUTTON_EDIT")}
             className="post-form__submit-btn"
             disabled={isSubmitting}
           />

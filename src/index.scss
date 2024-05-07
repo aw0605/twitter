@@ -532,6 +532,11 @@ body {
   justify-content: space-between;
   align-items: center;
 
+  &__flex {
+    display: flex;
+    gap: 8px;
+  }
+
   &__image {
     border-radius: 50%;
     width: 100px;
@@ -542,8 +547,16 @@ body {
     @extend .button;
     background-color: $primaryColor;
 
-    &:hover,
-    &:focus {
+    &--language {
+      @extend .button;
+      background-color: $gray;
+
+      &:hover {
+        background-color: $grayDark;
+      }
+    }
+
+    &:hover {
       background-color: $activeBorder;
     }
   }
